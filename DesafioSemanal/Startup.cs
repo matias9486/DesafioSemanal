@@ -1,3 +1,4 @@
+using DesafioSemanal.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace DesafioSemanal
 {
@@ -32,6 +34,18 @@ namespace DesafioSemanal
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DesafioSemanal", Version = "v1" });
             });
+
+            //agregado para las dependencias de entity framework con sql
+            services.AddEntityFrameworkSqlServer();
+            //agregar nuestro dbContext
+            services.AddDbContext<BlogContext>((services, options) =>
+            {
+                options.UseInternalServiceProvider(services);                
+                //agregamos el connection string en appsettings y lo llamamos en la siguiente linea
+                options.UseSqlServer(Configuration.GetConnectionString("BlogConnection"));
+
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
