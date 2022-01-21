@@ -3,11 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DesafioSemanal.Model
 {
-    public class Comment
-    {
-        [Key]
-        public int CommentId { get; set; }
-
+    public class Comment:BaseEntity
+    {        
         [Required(ErrorMessage = "{0} es requerido.")]
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }

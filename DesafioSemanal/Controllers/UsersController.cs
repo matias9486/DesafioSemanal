@@ -1,72 +1,61 @@
-﻿using DesafioSemanal.Context;
+﻿using DesafioSemanal.Interfaces;
 using DesafioSemanal.Model;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DesafioSemanal.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
 	public class UsersController : ControllerBase
-    {
-		
-		private readonly BlogContext _context;
-		public UsersController(BlogContext context)
+    {		
+		private readonly IUserRepository _userRepository;		
+		public UsersController(IUserRepository user)
 		{
-			_context = context;
+			_userRepository = user;
 		}
 
 		[HttpGet]
 		[Route("ObtenerUsuarios")]       
 		public IActionResult get()
 		{			
-			return Ok(_context.Users.ToList()); 
+			return Ok(_userRepository.GetUsers()); //obtengo entidades mediante el repositorio
 		}
-		
-		
+				
 		[HttpPost]
-		public IActionResult Post(User u)      
-		{
-			_context.Users.Add(u);   //lo agregamos al contexto(a la tabla)
-			_context.SaveChanges();     //guardamos los cambios
+		public IActionResult Post(User user)      
+		{			
+			_userRepository.Add(user);   //llamamos al metodo agregar del repositorio que ya agrega y guarda por lo que no necesito el saveCanges
 			return Ok();
 		}
 
 		[HttpPut]
 		public IActionResult Put(User user)       
-		{
-			if (_context.Users.FirstOrDefault(x => x.UserId == user.UserId) == null) return BadRequest("El usuario enviado no existe"); //sino encuentro ese objeto devuelvo un error 400 y msj
-
-			//creamos un objeto auxiliar  y guardamos el original para modificarlo. Hacemos esto porque no nospermite aplicar _context.Continent.Update(continent); directamente																															//creamos un objeto Continent auxiliar  y guardamos el original para modificarlo. Hacemos esto porque no nospermite aplicar _context.users.Update(user); directamente
-			var modificarUser = _context.Users.Find(user.UserId);
+		{			
+			var modificarUser = _userRepository.GetEntity(user.Id);
+			if (modificarUser == null) 
+				return NotFound($"El usuario con id {user.Id} no existe.");
+			
 			//modificamos el obj auxiliar. .Net, reconoce el objeto levantado desde el context como si trabajaramos sobre el original directamente
 			modificarUser.Name = user.Name;
 			modificarUser.Email = user.Email;
 			modificarUser.Password = user.Password;
+			modificarUser.Comments = user.Comments;
+			modificarUser.Posts = user.Posts;
 
-			_context.SaveChanges();     //guardamos los cambios
-			return Ok(_context.Users.ToList());
+			_userRepository.Update(modificarUser);     //guardamos los cambios
+			return Ok("Se modificó usuario.");
 		}
-
 
 		[HttpDelete]
 		[Route("{id}")] 
 		public IActionResult Delete(int id)     
-		{
-			if (_context.Users.FirstOrDefault(x => x.UserId == id) == null) 
-				return BadRequest("El usuario enviado no existe"); //sino encuentro ese objeto devuelvo un error 400 y msj																																   
+		{			
+			var user = _userRepository.GetEntity(id);
+			if (user == null) 
+				return NotFound($"El usuario con id {id} no existe.");
 
-			//creamos un objeto Continent auxiliar  y guardamos el original para eliminarlo.
-			var auxContinent = _context.Users.Find(id);
-			//removemos el objeto de la lista
-			_context.Users.Remove(auxContinent);
-
-			_context.SaveChanges();     //guardamos los cambios
-			return Ok(_context.Users.ToList());
+			_userRepository.Delete(id);
+			return Ok("Se eliminó usuario.");
 		}
 
 

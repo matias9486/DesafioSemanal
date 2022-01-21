@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using DesafioSemanal.Repositories;
+using DesafioSemanal.Interfaces;
+using Newtonsoft.Json;
 
 namespace DesafioSemanal
 {
@@ -28,6 +31,10 @@ namespace DesafioSemanal
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //agregamos este servicio para ignorar las relaciones circulares
+            services.AddControllers().AddNewtonsoftJson(options=>
+                options.SerializerSettings.ReferenceLoopHandling= ReferenceLoopHandling.Ignore
+            );
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -45,7 +52,10 @@ namespace DesafioSemanal
                 options.UseSqlServer(Configuration.GetConnectionString("BlogConnection"));
 
             });
-
+            
+            //agregamos las dependencias o servicios
+            //inyectamos la interfaz con su implementacion
+            services.AddScoped<IUserRepository,UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
