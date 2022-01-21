@@ -25,7 +25,7 @@ namespace DesafioSemanal.Controllers
 		public IActionResult Post(User user)      
 		{			
 			_userRepository.Add(user);   //llamamos al metodo agregar del repositorio que ya agrega y guarda por lo que no necesito el saveCanges
-			return Ok();
+			return Ok("Se agregó usuario.");
 		}
 
 		[HttpPut]
