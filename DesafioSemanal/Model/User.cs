@@ -1,12 +1,16 @@
 ﻿
+using DesafioSemanal.Interfaces;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 
 namespace DesafioSemanal.Model
 {
-    public class User:BaseEntity
-    {        
+    public class User:IBaseEntity
+    {
+        [Key]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "{0} es requerido.")]
         [StringLength(20, ErrorMessage = "{0} no puede contener mas de 20 caracteres.")]
         public string Name { get; set; }

@@ -1,10 +1,14 @@
-﻿using System;
+﻿using DesafioSemanal.Interfaces;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace DesafioSemanal.Model
 {
-    public class Comment:BaseEntity
-    {        
+    public class Comment:IBaseEntity
+    {
+        [Key]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "{0} es requerido.")]
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
