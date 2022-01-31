@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DesafioSemanal.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    [Migration("20220121195128_creacion_db")]
-    partial class creacion_db
+    [Migration("20220131222057_Primera")]
+    partial class Primera
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

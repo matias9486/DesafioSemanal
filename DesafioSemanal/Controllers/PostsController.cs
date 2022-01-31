@@ -1,5 +1,6 @@
 ﻿using DesafioSemanal.Interfaces;
 using DesafioSemanal.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace DesafioSemanal.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
+	[Authorize]
 	public class PostsController : ControllerBase
 	{
 		private readonly IPostRepository _postRepository;

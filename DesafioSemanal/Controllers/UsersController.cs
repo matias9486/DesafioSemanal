@@ -1,11 +1,13 @@
 ﻿using DesafioSemanal.Interfaces;
 using DesafioSemanal.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DesafioSemanal.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
+	[Authorize]
 	public class UsersController : ControllerBase
     {		
 		private readonly IUserRepository _userRepository;		
